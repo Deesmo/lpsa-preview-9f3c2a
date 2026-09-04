@@ -1,60 +1,49 @@
-<!DOCTYPE html><html  lang="en"><head><title data-rh="true"></title><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, shrink-to-fit=no"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="theme-color" content="#0E0D0B"/><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/><meta http-equiv="Pragma" content="no-cache"/><meta name="lpsa-build" content="v3.9"/><title>Lefkowitz Plastic Surgery and Aesthetics</title><meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex"/><meta name="googlebot" content="noindex, nofollow"/><link rel="manifest" href="/lpsa-preview-9f3c2a/manifest.json"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black"/><meta name="apple-mobile-web-app-title" content="Lefkowitz"/><link rel="apple-touch-icon" sizes="180x180" href="/lpsa-preview-9f3c2a/icon-180.png"/><link rel="icon" type="image/png" sizes="192x192" href="/lpsa-preview-9f3c2a/icon-192.png"/><link rel="icon" type="image/png" sizes="32x32" href="/lpsa-preview-9f3c2a/icon-32.png"/><style id="expo-reset">#root,body,html{height:100%}body{overflow:hidden}#root{display:flex}</style><style>
+<!DOCTYPE html><html  lang="en"><head><title data-rh="true"></title><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, shrink-to-fit=no"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="theme-color" content="#0E0D0B"/><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/><meta http-equiv="Pragma" content="no-cache"/><meta name="lpsa-build" content="v4.0"/><title>Lefkowitz Plastic Surgery and Aesthetics</title><meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex"/><meta name="googlebot" content="noindex, nofollow"/><link rel="manifest" href="/lpsa-preview-9f3c2a/manifest.json"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black"/><meta name="apple-mobile-web-app-title" content="Lefkowitz"/><link rel="apple-touch-icon" sizes="180x180" href="/lpsa-preview-9f3c2a/icon-180.png"/><link rel="icon" type="image/png" sizes="192x192" href="/lpsa-preview-9f3c2a/icon-192.png"/><link rel="icon" type="image/png" sizes="32x32" href="/lpsa-preview-9f3c2a/icon-32.png"/><style id="expo-reset">#root,body,html{height:100%}body{overflow:hidden}#root{display:flex}</style><style>
 /*
- * THE iOS CHIN GAP (Brad, 2026-09-04 — survived a delete + reinstall, so it was
- * never cache, and survived portalling the tab bar out of the navigator, so it
- * was never the transformed-ancestor rule either).
+ * THE ACTUAL ROOT CAUSE — lifted from our OWN shipping apps, where this exact
+ * complaint was already solved: archon-staging/video-studio (2026-07-20, Brad:
+ * "bottom bar floats to mid-screen when scrolling") and court-app.
  *
- * Known WebKit bug. The broken combination is:
- *     display:standalone + viewport-fit=cover + black-translucent + height:100%
- * iOS shifts the whole view up by the status-bar height (~59px) to render behind
- * the status bar, but the viewport never expands to compensate. With height:100%
- * the body resolves against a containing block that doesn't know about that
- * shift, so the body simply ENDS ~59px above the physical bottom — and a fixed
- * bottom:0 element lands there, floating, with the page background below it.
+ * HORIZONTAL OVERFLOW. If ANY element is wider than the device, mobile Safari
+ * widens the LAYOUT VIEWPORT past the device width and zooms the layout out to
+ * fit. position:fixed pins to the LAYOUT viewport — which is now bigger than
+ * the screen — so the bar visually lands ABOVE the physical bottom with page
+ * background below it. That is the "floating bar with a white strip", exactly.
+ * Clamping horizontal overflow keeps layout viewport == device width, and the
+ * bar stays glued to the real bottom.
  *
- * 100dvh resolves against the real dynamic viewport, so the body reaches the
- * physical bottom and bottom:0 finally means bottom. 100vh is the fallback for
- * anything without dvh support.
- */
-/*
- * The prescribed iOS-PWA shell (Perplexity + Grok both land on this exact
- * pattern; it is what production PWAs ship). Three parts, all required:
- *
- *   1. root chain is EXACTLY viewport-tall and NEVER scrolls itself
- *   2. scrolling happens in an inner container
- *   3. the bar is fixed to bottom:0 with the FULL safe-area inset as padding
- *
- * Part 1 is the piece I had never done. While the BODY is the scroller, iOS
- * standalone resolves position:fixed against a shifting layout viewport, so a
- * bottom:0 bar drifts and leaves page background under it. overflow:hidden on
- * the root chain removes the body scroller entirely, and fixed becomes exact.
- *
- * !important because React Native Web injects its own html/body/#root sizing
- * at runtime, AFTER this static sheet.
+ * This is why none of my viewport/height/portal theories moved it: the bar was
+ * pinned correctly the whole time, to a viewport that was the wrong SIZE.
  */
 html, body {
   background-color: #E7E3DA;
-  height: 100vh !important;
-  height: 100dvh !important;
-  min-height: 100vh !important;
-  min-height: 100dvh !important;
-  max-height: 100dvh !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: hidden !important;
-  position: fixed !important;
-  inset: 0 !important;
-  width: 100% !important;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-x: clip;
+  max-width: 100%;
+  width: 100%;
 }
+/* Nothing may exceed the device width — one stray wide node re-triggers the zoom. */
 #root {
-  height: 100vh !important;
-  height: 100dvh !important;
-  min-height: 100dvh !important;
-  max-height: 100dvh !important;
-  overflow: hidden !important;
-  display: flex;
-  flex-direction: column;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
+/* Second half of the video-studio fix: Safari AUTO-ZOOMS when focusing any input
+   under 16px, and a zoomed layout un-pins position:fixed the same way. 16px on
+   touch makes that zoom impossible. */
+@media (pointer: coarse) {
+  input, select, textarea { font-size: 16px !important; }
+}
+/*
+ * court-app v69, belt-and-braces. When iOS restores a standalone PWA it can
+ * leave the VISUAL viewport offset from the LAYOUT viewport; fixed bottom
+ * chrome then renders mid-screen even with everything above correct. While
+ * html.vv-anchor is set, the bar is translated to the visual-viewport bottom
+ * by --vvdy, and the transform is cleared the instant they re-converge.
+ */
+html.vv-anchor #lpsa-tabbar { transform: translateY(var(--vvdy, 0px)); }
 /*
  * The tab bar, addressed by real CSS rather than through the RN style system.
  * React Native Web silently DROPS style strings it cannot validate — which is
@@ -87,7 +76,7 @@ body {
 </style><script>
 (function () {
   try {
-    var running = "v3.9";
+    var running = "v4.0";
     var base = '/lpsa-preview-9f3c2a';
     fetch(base + '/version.json?t=' + Date.now(), { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : null; })
@@ -102,6 +91,33 @@ body {
       })
       .catch(function () {});
   } catch (e) {}
+})();
+</script><script>
+(function () {
+  var vv = window.visualViewport; if (!vv) return;
+  var el = document.documentElement, vvDy = null, loopUntil = 0, raf = 0;
+  function clear() {
+    if (vvDy !== null) { vvDy = null; el.classList.remove('vv-anchor'); el.style.removeProperty('--vvdy'); }
+  }
+  function apply() {
+    raf = 0;
+    if (vv.scale > 1.02) { clear(); }
+    else {
+      var dy = Math.round(vv.offsetTop + vv.height - window.innerHeight);
+      var wedged = vv.offsetTop > 1 || Math.abs(window.innerHeight - vv.height) > 1;
+      if (wedged && dy !== 0) {
+        if (dy !== vvDy) { vvDy = dy; el.style.setProperty('--vvdy', dy + 'px'); el.classList.add('vv-anchor'); }
+      } else clear();
+    }
+    if (Date.now() < loopUntil && !raf) raf = requestAnimationFrame(apply);
+  }
+  function kick(ms) { if (ms) loopUntil = Math.max(loopUntil, Date.now() + ms); if (!raf) raf = requestAnimationFrame(apply); }
+  vv.addEventListener('resize', function () { kick(0); });
+  vv.addEventListener('scroll', function () { kick(0); });
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) kick(3000); });
+  window.addEventListener('pageshow', function () { kick(3000); });
+  window.addEventListener('focus', function () { kick(3000); });
+  kick(3000);
 })();
 </script><style id="react-native-stylesheet">[stylesheet-group="0"]{}
 body{margin:0;}
