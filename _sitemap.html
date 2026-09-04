@@ -1,4 +1,4 @@
-<!DOCTYPE html><html  lang="en"><head><title data-rh="true"></title><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, shrink-to-fit=no"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="theme-color" content="#0E0D0B"/><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/><meta http-equiv="Pragma" content="no-cache"/><meta name="lpsa-build" content="v4.0"/><title>Lefkowitz Plastic Surgery and Aesthetics</title><meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex"/><meta name="googlebot" content="noindex, nofollow"/><link rel="manifest" href="/lpsa-preview-9f3c2a/manifest.json"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black"/><meta name="apple-mobile-web-app-title" content="Lefkowitz"/><link rel="apple-touch-icon" sizes="180x180" href="/lpsa-preview-9f3c2a/icon-180.png"/><link rel="icon" type="image/png" sizes="192x192" href="/lpsa-preview-9f3c2a/icon-192.png"/><link rel="icon" type="image/png" sizes="32x32" href="/lpsa-preview-9f3c2a/icon-32.png"/><style id="expo-reset">#root,body,html{height:100%}body{overflow:hidden}#root{display:flex}</style><style>
+<!DOCTYPE html><html  lang="en"><head><title data-rh="true"></title><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, shrink-to-fit=no"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="theme-color" content="#0E0D0B"/><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/><meta http-equiv="Pragma" content="no-cache"/><meta name="lpsa-build" content="v4.1"/><title>Lefkowitz Plastic Surgery and Aesthetics</title><meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex"/><meta name="googlebot" content="noindex, nofollow"/><link rel="manifest" href="/lpsa-preview-9f3c2a/manifest.json"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black"/><meta name="apple-mobile-web-app-title" content="Lefkowitz"/><link rel="apple-touch-icon" sizes="180x180" href="/lpsa-preview-9f3c2a/icon-180.png"/><link rel="icon" type="image/png" sizes="192x192" href="/lpsa-preview-9f3c2a/icon-192.png"/><link rel="icon" type="image/png" sizes="32x32" href="/lpsa-preview-9f3c2a/icon-32.png"/><style id="expo-reset">#root,body,html{height:100%}body{overflow:hidden}#root{display:flex}</style><style>
 /*
  * THE ACTUAL ROOT CAUSE — lifted from our OWN shipping apps, where this exact
  * complaint was already solved: archon-staging/video-studio (2026-07-20, Brad:
@@ -76,7 +76,7 @@ body {
 </style><script>
 (function () {
   try {
-    var running = "v4.0";
+    var running = "v4.1";
     var base = '/lpsa-preview-9f3c2a';
     fetch(base + '/version.json?t=' + Date.now(), { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : null; })
@@ -105,7 +105,8 @@ body {
     else {
       var dy = Math.round(vv.offsetTop + vv.height - window.innerHeight);
       var wedged = vv.offsetTop > 1 || Math.abs(window.innerHeight - vv.height) > 1;
-      if (wedged && dy !== 0) {
+      if (dy < 0) dy = 0;
+      if (wedged && dy > 0) {
         if (dy !== vvDy) { vvDy = dy; el.style.setProperty('--vvdy', dy + 'px'); el.classList.add('vv-anchor'); }
       } else clear();
     }
@@ -118,6 +119,39 @@ body {
   window.addEventListener('pageshow', function () { kick(3000); });
   window.addEventListener('focus', function () { kick(3000); });
   kick(3000);
+})();
+</script><script>
+(function () {
+  if (!/[?&]debug=1/.test(location.search)) return;
+  var d = document.createElement('div');
+  d.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:99999;background:rgba(0,0,0,.86);color:#0f0;'
+    + 'font:11px/1.45 ui-monospace,Menlo,monospace;padding:6px 8px;white-space:pre;pointer-events:none';
+  var line = document.createElement('div');
+  line.style.cssText = 'position:fixed;left:0;right:0;height:2px;background:#f0f;z-index:99998;pointer-events:none';
+  document.body.appendChild(d); document.body.appendChild(line);
+  var probe = document.createElement('div');
+  probe.style.cssText = 'position:fixed;bottom:0;height:env(safe-area-inset-bottom,0px);width:1px;opacity:0';
+  document.body.appendChild(probe);
+  function tick() {
+    var vv = window.visualViewport, bar = document.getElementById('lpsa-tabbar');
+    var br = bar ? bar.getBoundingClientRect() : null;
+    var inset = probe.getBoundingClientRect().height;
+    line.style.top = (vv ? vv.offsetTop + vv.height - 2 : innerHeight - 2) + 'px';
+    d.textContent =
+      'build ' + `${'\''}` + '\n';
+    d.textContent =
+      'build       ' + (document.querySelector('meta[name=lpsa-build]')||{}).content + '\n' +
+      'innerHeight ' + innerHeight + '   screen.h ' + screen.height + '\n' +
+      'vv.height   ' + (vv ? Math.round(vv.height) : '-') + '   vv.top ' + (vv ? Math.round(vv.offsetTop) : '-') +
+        '   scale ' + (vv ? vv.scale.toFixed(2) : '-') + '\n' +
+      'safe-inset  ' + inset.toFixed(1) + '\n' +
+      '--vvdy      ' + (getComputedStyle(document.documentElement).getPropertyValue('--vvdy') || 'none') + '\n' +
+      'bar.bottom  ' + (br ? Math.round(br.bottom) : '-') + '   GAP->inner ' + (br ? Math.round(innerHeight - br.bottom) : '-') +
+        '   GAP->visual ' + (br && vv ? Math.round(vv.offsetTop + vv.height - br.bottom) : '-') + '\n' +
+      'docScrollW  ' + document.documentElement.scrollWidth + '   clientW ' + document.documentElement.clientWidth;
+    requestAnimationFrame(tick);
+  }
+  tick();
 })();
 </script><style id="react-native-stylesheet">[stylesheet-group="0"]{}
 body{margin:0;}
