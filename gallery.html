@@ -1,4 +1,4 @@
-<!DOCTYPE html><html  lang="en"><head><title data-rh="true"></title><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, shrink-to-fit=no"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="theme-color" content="#0E0D0B"/><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/><meta http-equiv="Pragma" content="no-cache"/><meta name="lpsa-build" content="v3.7"/><title>Lefkowitz Plastic Surgery and Aesthetics</title><meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex"/><meta name="googlebot" content="noindex, nofollow"/><link rel="manifest" href="/lpsa-preview-9f3c2a/manifest.json"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/><meta name="apple-mobile-web-app-title" content="Lefkowitz"/><link rel="apple-touch-icon" sizes="180x180" href="/lpsa-preview-9f3c2a/icon-180.png"/><link rel="icon" type="image/png" sizes="192x192" href="/lpsa-preview-9f3c2a/icon-192.png"/><link rel="icon" type="image/png" sizes="32x32" href="/lpsa-preview-9f3c2a/icon-32.png"/><style id="expo-reset">#root,body,html{height:100%}body{overflow:hidden}#root{display:flex}</style><style>
+<!DOCTYPE html><html  lang="en"><head><title data-rh="true"></title><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, shrink-to-fit=no"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="theme-color" content="#0E0D0B"/><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/><meta http-equiv="Pragma" content="no-cache"/><meta name="lpsa-build" content="v3.8"/><title>Lefkowitz Plastic Surgery and Aesthetics</title><meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex"/><meta name="googlebot" content="noindex, nofollow"/><link rel="manifest" href="/lpsa-preview-9f3c2a/manifest.json"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black"/><meta name="apple-mobile-web-app-title" content="Lefkowitz"/><link rel="apple-touch-icon" sizes="180x180" href="/lpsa-preview-9f3c2a/icon-180.png"/><link rel="icon" type="image/png" sizes="192x192" href="/lpsa-preview-9f3c2a/icon-192.png"/><link rel="icon" type="image/png" sizes="32x32" href="/lpsa-preview-9f3c2a/icon-32.png"/><style id="expo-reset">#root,body,html{height:100%}body{overflow:hidden}#root{display:flex}</style><style>
 /*
  * THE iOS CHIN GAP (Brad, 2026-09-04 — survived a delete + reinstall, so it was
  * never cache, and survived portalling the tab bar out of the navigator, so it
@@ -18,14 +18,19 @@
  */
 html, body {
   background-color: #E7E3DA;
-  height: 100vh;
-  height: 100dvh;
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100vh !important;
+  height: 100dvh !important;
+  min-height: 100vh !important;
+  min-height: 100dvh !important;
+  margin: 0;
+  padding: 0;
 }
+/* React Native Web injects its own #root sizing at runtime, after this sheet.
+   !important keeps the dvh height from being silently replaced by 100%. */
 #root {
-  height: 100vh;
-  height: 100dvh;
+  height: 100vh !important;
+  height: 100dvh !important;
+  min-height: 100dvh !important;
   display: flex;
   flex-direction: column;
 }
@@ -40,7 +45,7 @@ body {
 </style><script>
 (function () {
   try {
-    var running = "v3.7";
+    var running = "v3.8";
     var base = '/lpsa-preview-9f3c2a';
     fetch(base + '/version.json?t=' + Date.now(), { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : null; })
