@@ -1,4 +1,4 @@
-<!DOCTYPE html><html  lang="en"><head><title data-rh="true"></title><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, shrink-to-fit=no"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="theme-color" content="#0E0D0B"/><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/><meta http-equiv="Pragma" content="no-cache"/><meta name="lpsa-build" content="v3.8"/><title>Lefkowitz Plastic Surgery and Aesthetics</title><meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex"/><meta name="googlebot" content="noindex, nofollow"/><link rel="manifest" href="/lpsa-preview-9f3c2a/manifest.json"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black"/><meta name="apple-mobile-web-app-title" content="Lefkowitz"/><link rel="apple-touch-icon" sizes="180x180" href="/lpsa-preview-9f3c2a/icon-180.png"/><link rel="icon" type="image/png" sizes="192x192" href="/lpsa-preview-9f3c2a/icon-192.png"/><link rel="icon" type="image/png" sizes="32x32" href="/lpsa-preview-9f3c2a/icon-32.png"/><style id="expo-reset">#root,body,html{height:100%}body{overflow:hidden}#root{display:flex}</style><style>
+<!DOCTYPE html><html  lang="en"><head><title data-rh="true"></title><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, shrink-to-fit=no"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="theme-color" content="#0E0D0B"/><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/><meta http-equiv="Pragma" content="no-cache"/><meta name="lpsa-build" content="v3.9"/><title>Lefkowitz Plastic Surgery and Aesthetics</title><meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex"/><meta name="googlebot" content="noindex, nofollow"/><link rel="manifest" href="/lpsa-preview-9f3c2a/manifest.json"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black"/><meta name="apple-mobile-web-app-title" content="Lefkowitz"/><link rel="apple-touch-icon" sizes="180x180" href="/lpsa-preview-9f3c2a/icon-180.png"/><link rel="icon" type="image/png" sizes="192x192" href="/lpsa-preview-9f3c2a/icon-192.png"/><link rel="icon" type="image/png" sizes="32x32" href="/lpsa-preview-9f3c2a/icon-32.png"/><style id="expo-reset">#root,body,html{height:100%}body{overflow:hidden}#root{display:flex}</style><style>
 /*
  * THE iOS CHIN GAP (Brad, 2026-09-04 — survived a delete + reinstall, so it was
  * never cache, and survived portalling the tab bar out of the navigator, so it
@@ -16,23 +16,65 @@
  * physical bottom and bottom:0 finally means bottom. 100vh is the fallback for
  * anything without dvh support.
  */
+/*
+ * The prescribed iOS-PWA shell (Perplexity + Grok both land on this exact
+ * pattern; it is what production PWAs ship). Three parts, all required:
+ *
+ *   1. root chain is EXACTLY viewport-tall and NEVER scrolls itself
+ *   2. scrolling happens in an inner container
+ *   3. the bar is fixed to bottom:0 with the FULL safe-area inset as padding
+ *
+ * Part 1 is the piece I had never done. While the BODY is the scroller, iOS
+ * standalone resolves position:fixed against a shifting layout viewport, so a
+ * bottom:0 bar drifts and leaves page background under it. overflow:hidden on
+ * the root chain removes the body scroller entirely, and fixed becomes exact.
+ *
+ * !important because React Native Web injects its own html/body/#root sizing
+ * at runtime, AFTER this static sheet.
+ */
 html, body {
   background-color: #E7E3DA;
   height: 100vh !important;
   height: 100dvh !important;
   min-height: 100vh !important;
   min-height: 100dvh !important;
-  margin: 0;
-  padding: 0;
+  max-height: 100dvh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100% !important;
 }
-/* React Native Web injects its own #root sizing at runtime, after this sheet.
-   !important keeps the dvh height from being silently replaced by 100%. */
 #root {
   height: 100vh !important;
   height: 100dvh !important;
   min-height: 100dvh !important;
+  max-height: 100dvh !important;
+  overflow: hidden !important;
   display: flex;
   flex-direction: column;
+}
+/*
+ * The tab bar, addressed by real CSS rather than through the RN style system.
+ * React Native Web silently DROPS style strings it cannot validate — which is
+ * what happened to my max(4px, calc(env(safe-area-inset-bottom) * 0.34)); the
+ * env() never reached the device at all. Plain CSS cannot be dropped.
+ *
+ * Full env(safe-area-inset-bottom), not a fraction of it. The 0.34 multiplier
+ * was mine, invented, and wrong: the correct behaviour is background flush to
+ * the physical edge with the CONTENT lifted clear of the home indicator.
+ */
+#lpsa-tabbar {
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  z-index: 80 !important;
+  margin: 0 !important;
+  background-color: #E7E3DA !important;
+  padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+  padding-bottom: max(4px, env(safe-area-inset-bottom, 0px)) !important;
 }
 body {
   -webkit-font-smoothing: antialiased;
@@ -45,7 +87,7 @@ body {
 </style><script>
 (function () {
   try {
-    var running = "v3.8";
+    var running = "v3.9";
     var base = '/lpsa-preview-9f3c2a';
     fetch(base + '/version.json?t=' + Date.now(), { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : null; })
@@ -502,5 +544,5 @@ input::-webkit-search-cancel-button,input::-webkit-search-decoration,input::-web
 @keyframes r-1pzkwqh{0%{transform:translateY(100%);}100%{transform:translateY(0%);}}
 @keyframes r-imtty0{0%{opacity:0;}100%{opacity:1;}}
 @keyframes r-q67da2{0%{transform:translateX(-100%);}100%{transform:translateX(400%);}}
-@keyframes r-t2lo5v{0%{opacity:1;}100%{opacity:0;}}</style><link rel="icon" href="/lpsa-preview-9f3c2a/favicon.ico"/><script type="module">globalThis.__EXPO_ROUTER_HYDRATE__=true;</script></head><body><div id="root"><div class="css-g5y9jx r-13awgt0"></div></div><script src="/lpsa-preview-9f3c2a/_expo/static/js/web/entry-a5287f868e435739c24f297f9bce7295.js" defer></script>
+@keyframes r-t2lo5v{0%{opacity:1;}100%{opacity:0;}}</style><link rel="icon" href="/lpsa-preview-9f3c2a/favicon.ico"/><script type="module">globalThis.__EXPO_ROUTER_HYDRATE__=true;</script></head><body><div id="root"><div class="css-g5y9jx r-13awgt0"></div></div><script src="/lpsa-preview-9f3c2a/_expo/static/js/web/entry-49c4f1ca4e1827ad6a7c487f5415a338.js" defer></script>
 </body></html>
